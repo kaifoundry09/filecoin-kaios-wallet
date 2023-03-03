@@ -1,0 +1,89 @@
+@import "../variable";
+.new-user-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    z-index: 10;
+    flex-direction: column;
+    .inner-container{
+        z-index: 10;
+    }
+    .heading{
+        margin-top: 10px;
+        color: #fff;
+        text-align: center;
+        font-size: 1.1rem;
+        
+    }
+    .sub-heading{
+        font-size: 0.8rem;
+        font-weight: 800;
+        margin-top: -10px;
+    }
+    .sub-p{
+        font-size: 0.7rem;
+        margin-top: 8px;
+        color: #fff;
+
+    }
+    .import-wallet {
+        width: 80%;
+        margin: auto;
+        margin-top: 10px;
+        // background-color: #fff;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0px 0px 5px 1px rgb(0 0 0 /20%);
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 1rem;
+        border-radius: .5rem;
+        box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.172);
+        color: #fff;
+    }
+
+    .create-wallet {
+        width: 80%;
+        margin: auto;
+        margin-top: 10px;
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0px 0px 5px 1px rgb(0 0 0 /20%);
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 1rem;
+        border-radius: .5rem;
+        box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.172);
+        color: #fff;
+    }
+    .btn{
+        text-align: center;
+        z-index: 10;
+        margin-top: 8px;
+        
+        button{
+            border: none;
+            padding: 7px 10px;
+            background-color: $button;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 22px;
+            font-size: 0.7rem;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+    .items:focus{
+        box-shadow: 2px 1px 12px 3px rgba(48, 124, 248, 0.993) !important;
+          }
+}
