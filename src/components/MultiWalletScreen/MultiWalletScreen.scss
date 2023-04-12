@@ -1,0 +1,157 @@
+@import "../variable";
+#multi-wallet {
+  .form {
+    word-break: break-all;
+    width: 80%;
+    margin: auto;
+    margin-top: 10px;
+    background-color: transparent !important;
+    padding: 1rem;
+    border-radius: 15px;
+    box-shadow: 0px 0px 5px 1px rgb(0 0 0 /20%);
+    // color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.172);
+    color: #fff;
+    label {
+      font-size: 0.9rem;
+    }
+
+    form {
+      margin-top: 10px;
+
+      input {
+        border-radius: 22px;
+        outline: none;
+        // border: 1px solid $button;
+        padding: 3px 8px;
+        width: 90%;
+
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 0.5rem;
+        border-radius: 1rem;
+        box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.172);
+        color: #fff;
+        &::placeholder {
+          color: #fff;
+        }
+      }
+
+      .checkbox {
+        font-size: 0.7rem;
+        vertical-align: middle;
+        margin-top: 10px;
+
+        input {
+          width: auto;
+          vertical-align: middle;
+        }
+
+        span {
+          color: blue;
+        }
+      }
+    }
+    button.btn {
+        display: block !important;
+        margin: auto;
+        margin-top: 0.5rem;
+        width: 90%;
+        text-align: center;
+        background-color: $button;
+        border: 1px solid #fff;
+        border-radius: 0.3rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+      }
+  }
+  .container {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.172);
+    position: relative;
+    margin: 1rem;
+    button {
+      margin-top: 0px;
+      border: 1px solid #fff;
+      padding: 7px 10px;
+      background-color: transparent;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .items {
+      background: transparent;
+      color: aliceblue;
+      border: none;
+    }
+    .items:focus {
+      box-shadow: 2px 1px 12px 3px rgba(48, 124, 248, 0.993) !important;
+      border: none;
+    }
+
+    button.btn {
+      display: block !important;
+      margin: auto;
+      margin-top: 0.5rem;
+      width: 90%;
+      text-align: center;
+      background-color: $button;
+      border: 1px solid #fff;
+      border-radius: 0.3rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+    }
+
+    .wallet-container {
+      overflow-y: scroll;
+      .wallet {
+        width: 90%;
+        word-wrap: break-word;
+        font-size: 0.8rem;
+        border: 1px solid rgba(151, 69, 69, 0.3);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+        .heading {
+          font-size: 0.9rem;
+          margin: 0.5rem 0;
+          span{
+            background-color: #878686;
+            padding: 3px 6px;
+            border-radius: 10px;
+            font-size: .7rem;
+          }
+        }
+        .value {
+          margin: 10px 0;
+        }
+        button.btn {
+          display: inline-block;
+          margin: 0;
+          font-size: 0.8rem;
+          // margin-top: .5rem;
+        }
+        .opacity-5 {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}

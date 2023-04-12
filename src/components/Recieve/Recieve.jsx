@@ -12,8 +12,9 @@ import QRCode from "qrcode.react";
 
 const Recieve = () => {
   const navigate = useNavigate();
-  const address = localStorage.getItem("address");
-  const shareUrl = window.location.origin + `/qrcode/:${address.slice(1, -1)}`;
+  const address = JSON.parse(localStorage.getItem("address"));
+  const activeIndex = localStorage.getItem("feai");
+  const shareUrl = window.location.origin + `/qrcode/:${address[activeIndex]}`;
 
   async function shareFiles() {
     const pngUrl = document.getElementById("qr-code-id").toDataURL();
@@ -22,10 +23,7 @@ const Recieve = () => {
     const image = new File([blob], "qr-code.png", { type: blob.type });
     // Share Code
     try {
-      let url = `https://wa.me/?text=Filecoin_Address:-${address.slice(
-        1,
-        -1
-      )} and Link ${shareUrl}`;
+      let url = `https://wa.me/?text=Filecoin_Address:-${address[activeIndex]} and Link ${shareUrl}`;
       window.location = url;
     } catch (error) {
       console.log(error);
@@ -99,14 +97,14 @@ const Recieve = () => {
               width: "100%",
               borderRadius: "0.5rem",
             }}
-            value={address.slice(1, -1)}
+            value={address[activeIndex]}
             viewBox={`0 0 256 256`}
             id="qr-code-id"
             includeMargin={true}
           />
         </div>
         <div className="key">
-          <p>{address && address.slice(1, -1)}</p>
+          <p>{address.length && address[activeIndex]}</p>
           <div className="flex">
             <button
               className="icons items"
@@ -114,7 +112,7 @@ const Recieve = () => {
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   navigator.clipboard
-                    .writeText(address.slice(1, -1))
+                    .writeText(address[activeIndex])
                     .then(function (x) {
                       alert("Copied to clipboard");
                     });
@@ -122,7 +120,7 @@ const Recieve = () => {
               }}
               onClick={() => {
                 navigator.clipboard
-                  .writeText(address.slice(1, -1))
+                  .writeText(address[activeIndex])
                   .then(function (x) {
                     alert("Copied to clipboard");
                   });

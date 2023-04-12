@@ -4,8 +4,8 @@ import "./ImportWallet.scss";
 import { keyPairFromMnemonic } from "@vinayakkalra/filecoin-wallet-pkg";
 import { WORKING_NET } from "../../Variables";
 import { useDispatch, useSelector } from "react-redux";
-import { saveAddress } from "../../Redux/actions/index";
-import { saveData, encryptData } from "../commanFunctions";
+import { saveAddress, savePassword } from "../../Redux/actions/index";
+import { saveData, encryptData, encryptPassword } from "../commanFunctions";
 
 function ImportWallet() {
   const navigate = useNavigate();
@@ -20,9 +20,14 @@ function ImportWallet() {
     const generatedKeypair = keyPairFromMnemonic(WORKING_NET, 0, mnmonic);
     console.log(generatedKeypair);
     dispatch(saveAddress(generatedKeypair.address));
-    saveData("address", generatedKeypair.address);
+    saveData("address", [generatedKeypair.address]);
+    dispatch(savePassword(password));
     let encrypt = encryptData(password, generatedKeypair);
-    saveData("fek", encrypt);
+    let encryptMnemonic = encryptData(password, mnmonic);
+    saveData("fek", [encrypt]);
+    saveData("fem", encryptMnemonic);
+    saveData("feai", 0);
+    saveData("fei", 0);
     navigate("/wallet");
   };
 

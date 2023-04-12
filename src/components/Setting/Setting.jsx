@@ -83,6 +83,20 @@ function Setting() {
               tabIndex={2}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
+                  navigate("/all-wallet");
+                }
+              }}
+              onClick={() => navigate("/all-wallet")}
+            >
+              <FaMoneyCheckAlt /> Accounts{" "}
+            </button>
+          </div>
+          <div className="option">
+            <button
+              className="items"
+              tabIndex={3}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
                   navigate("/export");
                 }
               }}
@@ -94,7 +108,7 @@ function Setting() {
           <div className="option">
             <button
               className="items"
-              tabIndex={3}
+              tabIndex={4}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   localStorage.clear();

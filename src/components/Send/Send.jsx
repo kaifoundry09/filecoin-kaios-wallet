@@ -78,16 +78,19 @@ const Send = () => {
   // Handle fetch RPC
   const [balance, setBalance] = useState(0);
   const fetchBalance = async () => {
+    let add = activeIndex < address.length? address[activeIndex]:importAddress[activeIndex - address.length]
     const response = await API.post(
-      `/api/v1/walletbalance/${address.slice(1, -1)}`
+      `/api/v1/walletbalance/${add}`
     );
     setBalance(Number(response.data.balance) / new BigNumber(1e18));
   };
 
-  const address = localStorage.getItem("address");
-  const fek = localStorage.getItem("fek");
+  const address = JSON.parse(localStorage.getItem("address"));
+  const importAddress = JSON.parse(localStorage.getItem("import"));
+  const fek = JSON.parse(localStorage.getItem("fek"));
+  const activeIndex = localStorage.getItem("feai");
   useEffect(() => {
-    if (!fek || !address) {
+    if (!fek.length || !address.length) {
       navigate("/");
     }
     fetchBalance();
@@ -252,7 +255,10 @@ const Send = () => {
   // Send Filecoin Function
   const sendFileCoin = async (privateKey) => {
     console.log("private", privateKey);
-    const fromAddress = address.slice(1, -1);
+    let importAddress = JSON.parse(localStorage.getItem("import"));
+    let address = JSON.parse(localStorage.getItem("address"));
+    const activeIndex = localStorage.getItem("feai");
+    let fromAddress = address.length > activeIndex ?  address[activeIndex] : importAddress[activeIndex - address.length];
     console.log("toAddress", toAddress);
 
     setTransactionLoading(true);
@@ -282,16 +288,14 @@ const Send = () => {
           message.Nonce
         );
         console.log("waitMessage", waitMessage);
-        if (waitMessage?.result?.Receipt) {
-          handleSaveTransaction(
-            toAddress,
-            fromAddress,
-            transaction.data.result["/"],
-            String(amount * new BigNumber(1e18))
-          );
-          setTransactionLoading(false);
-          setTransactionDone(true);
-        }
+        handleSaveTransaction(
+          toAddress,
+          fromAddress,
+          transaction.data.result["/"],
+          String(amount * new BigNumber(1e18))
+        );
+        setTransactionLoading(false);
+        setTransactionDone(true);
       } catch (error) {
         setTimeout(() => {
           againWaitMsgCheck(
@@ -334,9 +338,13 @@ const Send = () => {
   // Handle export private key
   const [inputPassword, setInputPassword] = useState("");
   const handleExportKey = () => {
-    const data = localStorage.getItem("fek");
+    const data = JSON.parse(localStorage.getItem("fek"));
+    const activeIndex = localStorage.getItem("feai");
+    let importData = JSON.parse(localStorage.getItem("feik"));
+    let address = JSON.parse(localStorage.getItem("address"));
+    let encryptedData = address.length > activeIndex ?  data[activeIndex] : importData[activeIndex - address.length];
     try {
-      const PlainData = decryptData(inputPassword, data);
+      const PlainData = decryptData(inputPassword, `"${encryptedData}"`);
       dispatch(savePrivateKey(PlainData._privateKey));
       if (PlainData?._privateKey) {
         sendFileCoin(PlainData?._privateKey);
@@ -360,7 +368,7 @@ const Send = () => {
   };
 
   const handleValidation = () => {
-    if (toAddress.length && amount) {
+    if (amaoutValid && toAddress.length && amount) {
       setConfirmation(true);
     }
   };
@@ -373,7 +381,7 @@ const Send = () => {
         !scannerOn && (
           <div id="send">
             <div className="container">
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", marginTop:"11px" }}>
                 <button
                   className="items"
                   tabIndex={0}
@@ -387,19 +395,7 @@ const Send = () => {
                   <BsArrowLeft className="larr" />
                 </button>
                 <h4>Send Money</h4>
-                <button
-                  className="items"
-                  tabIndex={1}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      setScannerOn(true);
-                      setwebcam();
-                    }
-                  }}
-                  onClick={() => setScannerOn(true) + setwebcam()}
-                >
-                  <MdQrCode2 className="larr" />
-                </button>
+                <MdQrCode2 className="larr" />
               </div>
               <div className="second">
                 <h2>To</h2>
@@ -410,7 +406,7 @@ const Send = () => {
                     value={toAddress}
                     onChange={(e) => setToAddress(e.target.value)}
                     className="items"
-                    tabIndex={2}
+                    tabIndex={1}
                     type="text"
                     placeholder="0xf033259..."
                   />
@@ -434,8 +430,8 @@ const Send = () => {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className={amaoutValid ? "items" : "items error"}
-                  tabIndex={3}
-                  type="number"
+                  tabIndex={2}
+                  type="tel"
                   placeholder="0.0321"
                 />
                 {!amaoutValid && (
@@ -444,6 +440,7 @@ const Send = () => {
                   </div>
                 )}
               </div>
+
               <div className="forth">
                 <h2>Total available amount</h2>
                 <p>{balance} FIL</p>
@@ -451,9 +448,25 @@ const Send = () => {
                   onClick={() => handleValidation()}
                   type="button"
                   className="items"
-                  tabIndex={4}
+                  tabIndex={3}
                 >
                   Send
+                </button>
+              </div>
+              <div className="forth">
+                <button
+                  type="button"
+                  className="items"
+                  tabIndex={4}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      setScannerOn(true);
+                      setwebcam();
+                    }
+                  }}
+                  onClick={() => setScannerOn(true) + setwebcam()}
+                >
+                  QR Scanner
                 </button>
               </div>
             </div>
@@ -558,8 +571,8 @@ const Send = () => {
                 <span className="export-heading">Payment Confirmation</span>
               </div>
               <p className="normal-text">
-                Are you sure you want to send {amount} filecoin to {toAddress}{" "}
-                address.
+                Are you sure you want to send {amount} filecoin <br /> to{" "}
+                {toAddress} address.
               </p>
 
               <p className="normal-text">

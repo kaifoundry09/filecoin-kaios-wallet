@@ -15,6 +15,8 @@ import API from "../../APIs/API";
 import BigNumber from "bignumber.js";
 import axios from "axios";
 import loading from "../Send/loading.gif";
+import filecoinIcon from "./filecoin-icon.png";
+import {KaiAd} from '../ads/KaiAd';
 // import noTransection from "./transection-img.png";
 
 function Wallet() {
@@ -23,12 +25,14 @@ function Wallet() {
   const [dollarPrice, setDollarPrice] = useState(0);
   const [transactionLoading, setTransactionLoading] = useState(false);
   const [rate, setRate] = useState(0);
+  const importAddress = JSON.parse(localStorage.getItem("import")) || [];
 
   localStorage.setItem("completed", true);
-  const address = localStorage.getItem("address");
+  const address = JSON.parse(localStorage.getItem("address"));
   const fek = localStorage.getItem("fek");
+  const activeIndex = Number(localStorage.getItem("feai"));
   useEffect(() => {
-    if (!fek || !address) {
+    if (!fek.length || !address.length) {
       navigate("/");
     }
     fetchBalance();
@@ -37,10 +41,11 @@ function Wallet() {
   // Handle fetch RPC
   const [balance, setBalance] = useState(0);
   const [fontSizeBalance, setFontSizeBalance] = useState("");
+  const addres = address.length > activeIndex ? address[activeIndex] : importAddress[activeIndex-address.length];
   const fetchBalance = async () => {
     setTransactionLoading(true);
     const response = await API.post(
-      `/api/v1/walletbalance/${address.slice(1, -1)}`
+      `/api/v1/walletbalance/${addres}`
     );
     setBalance(Number(response.data.balance) / new BigNumber(1e18));
     if (
@@ -67,12 +72,12 @@ function Wallet() {
 
   // Handle Dollar Price
   const getDollarPrice = async () => {
-    const response = await axios.get(
-      `https://api.coingecko.com/api/v3/simple/price/?ids=filecoin&vs_currencies=usd`
+    const response = await API.get(
+      `/api/v1/d_price`
     );
-    if (response?.data?.filecoin?.usd) {
-      setDollarPrice(response?.data?.filecoin?.usd * balance);
-      setRate(response?.data?.filecoin?.usd);
+    if (response?.data?.data?.price) {
+      setDollarPrice(response?.data?.data?.price * balance);
+      setRate(response?.data?.data?.price);
     }
   };
 
@@ -174,11 +179,13 @@ function Wallet() {
           onClick={() => navigate("/setting")}
         >
           <AiFillSetting />
+          <KaiAd />
         </button>
       </div>
       <div className="wallet-header">
         <div className="content">
-          <div className={`wallet-balance ${fontSizeBalance}`}>⨎{balance}</div>
+          <div style={{fontSize:"1.2rem",margin:".5rem 0"}}>Account {activeIndex+1}</div>
+          <div className={`wallet-balance ${fontSizeBalance}`}><img alt="" src={filecoinIcon} />{balance}</div>
           <div
             style={{
               display: "flex",
@@ -194,7 +201,7 @@ function Wallet() {
             {dollarPrice.toFixed(2)}
           </div>
 
-          <p style={{ marginTop: "8px" }}>{address.slice(1, 42)}</p>
+          <p style={{ marginTop: "8px" }}>{addres}</p>
 
           <div
             style={{
@@ -211,11 +218,11 @@ function Wallet() {
               tabIndex={1}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  copyToClipboard(address.slice(1, -1));
+                  copyToClipboard(addres);
                 }
               }}
               onClick={() => {
-                copyToClipboard(address.slice(1, -1));
+                copyToClipboard(addres);
               }}
             >
               <FaRegCopy />

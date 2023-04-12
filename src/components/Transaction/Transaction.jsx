@@ -53,21 +53,31 @@ const Transaction = () => {
   const [status, setStatus] = useState(false);
   const [transactionLoading, setTransactionLoading] = useState(false);
   const [transactionData, setTransactionData] = useState([]);
-  const address = localStorage.getItem("address").slice(1, -1);
+  const address = JSON.parse(localStorage.getItem("address"));
+  const activeIndex = localStorage.getItem("feai");
+  const importAddress = JSON.parse(localStorage.getItem("import"));
+  let currentAddress =
+    address.length > activeIndex
+      ? address[activeIndex]
+      : importAddress[activeIndex - address.length];
 
   // Handle Fetch Transaction History
   const fetchTransactionHistory = async () => {
     setTransactionLoading(true);
-    if (address.slice(0, 1) == "f") {
-      const response = await API.get(`/api/v1/alltransaction/${address}`);
+    if (currentAddress.slice(0, 1) == "f") {
+      const response = await API.get(
+        `/api/v1/alltransaction/${currentAddress}`
+      );
       if (response?.data?.messages?.length) {
         setStatus(true);
         setTransactionData(response.data.messages);
       } else {
         console.log(response.data);
       }
-    } else if (address.slice(0, 1) == "t") {
-      const response = await API.post(`/api/v1/alltransaction/${address}`);
+    } else if (currentAddress.slice(0, 1) == "t") {
+      const response = await API.post(
+        `/api/v1/alltransaction/${currentAddress}`
+      );
       if (response?.data?.messages?.length) {
         setStatus(true);
         setTransactionData(response.data.messages);
@@ -77,6 +87,12 @@ const Transaction = () => {
     }
     setTransactionLoading(false);
   };
+
+
+    // Generate Time Date from TimeStamp
+    const genrateTimeDate = (timestamp)=>{
+      return new Date(timestamp).toLocaleString()
+    }
 
   return (
     <div className="transaction-body">
@@ -135,7 +151,7 @@ const Transaction = () => {
                       if (e.key === "Enter") {
                         navigate(
                           `/details/:${
-                            address.slice(0, 1) == "f"
+                            currentAddress.slice(0, 1) == "f"
                               ? element.cid
                               : element.signed_cid
                           }`
@@ -145,7 +161,7 @@ const Transaction = () => {
                     onClick={() =>
                       navigate(
                         `/details/:${
-                          address.slice(0, 1) == "f"
+                          currentAddress.slice(0, 1) == "f"
                             ? element.cid
                             : element.signed_cid
                         }`
@@ -155,7 +171,7 @@ const Transaction = () => {
                     <div className="wrap">
                       <div style={{ display: "inline-block" }}>
                         <div className="trns-icon">
-                          {element.from == address ? (
+                          {element.from == currentAddress ? (
                             <FiArrowUpRight />
                           ) : (
                             <FiArrowDownLeft />
@@ -163,17 +179,21 @@ const Transaction = () => {
                         </div>
                       </div>
                       <div className="trans-sec">
-                        <div className="from-add">
+                        <div className="from-add mb-4">
                           <div className="trans-point">FROM ADDRESS : </div>{" "}
                           {element.from.slice(0, 5)}....{element.from.slice(-5)}
                         </div>
-                        <div className="to-add">
+                        <div className="to-add mb-4">
                           <div className="trans-point">TO ADDRESS : </div>{" "}
                           {element.to.slice(0, 5)}....{element.to.slice(-5)}
                         </div>
-                        <div className="value">
+                        <div className="value mb-4">
                           <div className="trans-point">VALUE : </div>
                           {Number(element.value) / new BigNumber(1e18)}
+                        </div>
+                        <div className="value mb-4">
+                          <div className="trans-point">Time : </div>
+                          {genrateTimeDate(element?.timestamp ? element?.timestamp : element?.last_modified)}
                         </div>
                       </div>
                     </div>

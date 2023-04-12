@@ -36,6 +36,11 @@
 
         .wallet-balance {
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            img{
+                width: 23px;
+            }
         }
 
         .font-1_5 {

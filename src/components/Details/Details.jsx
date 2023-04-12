@@ -10,7 +10,13 @@ function Details() {
   const navigate = useNavigate();
   const param = useParams();
   const messageid = param.messageid.slice(1);
-  const address = localStorage.getItem("address").slice(1, -1);
+  const activeIndex = localStorage.getItem("feai");
+  const address = JSON.parse(localStorage.getItem("address"));
+  const importAddress = JSON.parse(localStorage.getItem("import"));
+  let currentAddress =
+    address.length > activeIndex
+      ? address[activeIndex]
+      : importAddress[activeIndex - address.length];
 
   function nav(move) {
     try {
@@ -50,16 +56,16 @@ function Details() {
   const [transactionData, setTransactionData] = useState([]);
   // Handle Api Call for Getting All Data from Message id
   const getDataFromMsg = async () => {
-    if (address.slice(0, 1) == "f") {
+    if (currentAddress.slice(0, 1) == "f") {
       const response = await API.get(
-        `/api/v1/transaction_details/${address}?cid=${messageid}`
+        `/api/v1/transaction_details/${currentAddress}?cid=${messageid}`
       );
       if (response?.data?.messages?.result) {
         setTransactionData(response.data.messages.result);
       }
-    } else if (address.slice(0, 1) == "t") {
+    } else if (currentAddress.slice(0, 1) == "t") {
       const response = await API.post(
-        `/api/v1/transaction_details/${address}?cid=${messageid}`
+        `/api/v1/transaction_details/${currentAddress}?cid=${messageid}`
       );
       if (response?.data?.messages?.result) {
         setTransactionData(response.data.messages.result);
@@ -70,6 +76,12 @@ function Details() {
   useEffect(() => {
     getDataFromMsg();
   }, []);
+
+
+  // Generate Time Date from TimeStamp
+  const genrateTimeDate = (timestamp)=>{
+    return new Date(timestamp).toLocaleString()
+  }
 
   return (
     <div>
@@ -148,12 +160,12 @@ function Details() {
             <h2>Time</h2>
             {transactionData?.timestamp && (
               <div className="data">
-                <span>{transactionData?.timestamp}</span>
+                <span>{genrateTimeDate(transactionData.timestamp)}</span>
               </div>
             )}
-            {transactionData?.block_time && (
+            {transactionData?.last_modified && (
               <div className="data">
-                <span>{transactionData?.block_time}</span>
+                <span>{genrateTimeDate(transactionData.last_modified)}</span>
               </div>
             )}
           </div>
@@ -161,7 +173,7 @@ function Details() {
             <h2>Block ID</h2>
             <div className="data">
               <span>
-                {address.slice(0, 1) == "f"
+                {currentAddress.slice(0, 1) == "f"
                   ? transactionData?.cid?.slice(0, 62)
                   : transactionData?.signed_cid?.slice(0, 62)}
               </span>
@@ -183,21 +195,6 @@ function Details() {
               />
             </div>
           </div>
-          {/* <div className="second">
-                        <h2>Miner</h2>
-                        <div className='data'><span>
-                            f01228008...</span><FaRegCopy className='items' tabIndex={4} onKeyPress={(e) => {
-                                if (e.key === "Enter") {
-                                    navigator.clipboard.writeText("").then(function (x) {
-                                        alert("Copied to clipboard");
-                                    });
-                                }
-                            }} onClick={() => {
-                                navigator.clipboard.writeText("").then(function (x) {
-                                    alert("Copied to clipboard");
-                                });
-                            }} /></div>
-                    </div> */}
           <div className="second">
             <h2>Block No.</h2>
             <div className="data">

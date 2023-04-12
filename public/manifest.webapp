@@ -1,0 +1,26 @@
+{
+    "version": "1.0.0",
+    "name": "wallet",
+    "description": "filecoin wallet.",
+    "type": "web",
+    "launch_path": "/index.html",
+    "icons": {
+        "56": "/icons/56x56.png",
+        "112": "/icons/112x112.png",
+        "128": "/icons/128x128.png"
+    },
+    "type": "web",
+     "default_locale": "en-US",
+    "dependencies": {
+		"ads-sdk": "1.5.8"
+	},
+    "permissions": {
+  "camera": {
+    "description": "Required for accessing cameras on the device."
+  }
+},
+"dependencies": {
+		"ads-sdk": "1.5.8"
+	}
+    }
+

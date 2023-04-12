@@ -7,7 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@vinayakkalra/filecoin-browser-transaction": "^0.0.1",
-    "@vinayakkalra/filecoin-wallet-pkg": "^1.1.5",
+    "@vinayakkalra/filecoin-wallet-pkg": "^1.1.7",
     "aos": "^2.3.4",
     "axios": "^0.21.4",
     "bignumber.js": "^9.1.1",

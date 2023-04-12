@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { keyPairFromMnemonic } from "@vinayakkalra/filecoin-wallet-pkg";
 import { WORKING_NET } from "../../Variables";
 import { useDispatch, useSelector } from "react-redux";
-import { saveAddress } from "../../Redux/actions/index";
-import { saveData, encryptData, decryptPassword } from "../commanFunctions";
+import { saveAddress, savePassword } from "../../Redux/actions/index";
+import { saveData, encryptData, decryptPassword ,encryptPassword} from "../commanFunctions";
 import API from "../../APIs/API";
 import axios from "axios";
 
@@ -32,9 +32,14 @@ function VerificationMnmonic() {
       mnmonicArr.join(" ")
     );
     dispatch(saveAddress(generatedKeypair.address));
-    saveData("address", generatedKeypair.address);
+    saveData("address", [generatedKeypair.address]);
+    dispatch(savePassword(password));
     let encrypt = encryptData(password, generatedKeypair);
-    saveData("fek", encrypt);
+    let encryptMnemonic = encryptData(password, mnmonicArr.join(" "));
+    saveData("fek", [encrypt]);
+    saveData("fem", encryptMnemonic);
+    saveData("feai", 0);
+    saveData("fei", 0);
     handleSaveAddress();
   };
 

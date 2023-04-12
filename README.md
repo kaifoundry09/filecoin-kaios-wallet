@@ -12,5 +12,5 @@ A Non-Custodial Wallet for filecoin network to work on feature phones that are u
 - [x] Send and recieve transactions
 - [x] Scaning of the QR codes of addresses from the KaiOS phones to make transactions easier
 - [x] Sharing the QR codes and addresses through whatsapp to make peer to peer transactions easier on KaiOS
-- [ ] Build a structure for HD wallets for the users who would like to use multiple addresses in the same wallet
-- [ ] UI enhancements as per feedback
+- [x] Build a structure for HD wallets for the users who would like to use multiple addresses in the same wallet
+- [x] UI enhancements as per feedback

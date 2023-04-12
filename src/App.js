@@ -17,6 +17,7 @@ import Export from "./components/Export/Export.jsx";
 import Details from "./components/Details/Details.jsx";
 import Transaction from "./components/Transaction/Transaction";
 import QRShare from "./components/QRShare/QRShare";
+import MultiWalletScreen from "./components/MultiWalletScreen/MultiWalletScreen";
 // import files to dist
 // const logo192 = require('../public/logo192.png')
 function App() {
@@ -69,6 +70,7 @@ function App() {
         <Route exact path="/transactions/*" element={<Transaction />} />
         <Route exact path="/details/:messageid" element={<Details />} />
         <Route exact path="/qrcode/:address" element={<QRShare />} />
+        <Route exact path="/all-wallet" element={<MultiWalletScreen />} />
       </Routes>
     </div>
   );

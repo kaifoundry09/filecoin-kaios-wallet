@@ -39,9 +39,13 @@ function Export() {
   const [data, setData] = useState({});
   const [isFind, setIsFind] = useState(false);
   const handleExportKey = () => {
-    const data = localStorage.getItem("fek");
+    let data = JSON.parse(localStorage.getItem("fek"));
+    let importData = JSON.parse(localStorage.getItem("feik"));
+    let address = JSON.parse(localStorage.getItem("address"));
+    const activeIndex = localStorage.getItem("feai");
+    let encryptedData = address.length > activeIndex ?  data[activeIndex] : importData[activeIndex - address.length];
     try {
-      const PlainData = decryptData(password, data);
+      const PlainData = decryptData(password, `"${encryptedData}"`);
       setData(PlainData);
       setIsFind(true);
     } catch (error) {
@@ -105,7 +109,8 @@ function Export() {
               <span className="export-heading">Export Keys</span>
             </div>
             <p className="normal-text">
-              *Export private key and public key through the your password
+              *Export private key and public key <br /> through the your
+              password
             </p>
             <form>
               <div>
