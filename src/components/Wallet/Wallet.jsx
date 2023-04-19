@@ -143,7 +143,6 @@ function Wallet() {
 
   function handleKeydown(e) {
     e.stopImmediatePropagation();
-    console.log("E", e.key);
     switch (e.key) {
       case "ArrowUp":
         nav(-1);
@@ -250,7 +249,6 @@ function Wallet() {
               className="items"
               tabIndex={3}
               onKeyPress={(e) => {
-                console.log("e", e);
                 if (e.key === "Enter") {
                   navigate("/send");
                 }

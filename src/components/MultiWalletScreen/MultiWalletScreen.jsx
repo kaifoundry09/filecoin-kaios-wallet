@@ -45,7 +45,6 @@ function MultiWalletScreen() {
         acIndex,
         decryptData(password, mnmonic)
       );
-      console.log(generatedKeypair);
       dispatch(saveAddress(generatedKeypair.address));
       address.push(generatedKeypair.address);
       saveData("address", address);
@@ -67,10 +66,12 @@ function MultiWalletScreen() {
   // Fetch All Wallet
   const [allBalance, setAllBalance] = useState([]);
   const fetchAllWalletBalance = async () => {
-    let arrayOfAddress = [address, importAddress];
-    arrayOfAddress = arrayOfAddress.flat();
+    let arr = [address, importAddress];
+    let data = arr.reduce((acc, curVal) => {
+      return acc.concat(curVal)
+  }, []);
     const response = await API.post(`/api/v1/multibalance`, {
-      data: arrayOfAddress,
+      data: data,
     });
     setAllBalance(response.data.balance);
   };
@@ -119,7 +120,6 @@ function MultiWalletScreen() {
     if (privateKey.length) {
       try {
         const generatedKeypair = keyPairFromPrivateKey(WORKING_NET, privateKey);
-        console.log(generatedKeypair);
         dispatch(saveAddress(generatedKeypair.address));
         importAddress.push(generatedKeypair.address);
         saveData("import", importAddress);

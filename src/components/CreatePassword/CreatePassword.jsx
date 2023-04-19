@@ -19,7 +19,6 @@ function CreatePassword() {
 
   const handleCreatePassword = () => {
     const reg = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    console.log(reg.test(password));
     if (reg.test(password)) {
       if (password === "") {
         alert("Please Enter password");

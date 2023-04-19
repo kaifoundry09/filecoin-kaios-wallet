@@ -72,7 +72,7 @@ const Transaction = () => {
         setStatus(true);
         setTransactionData(response.data.messages);
       } else {
-        console.log(response.data);
+        // console.log(response.data);
       }
     } else if (currentAddress.slice(0, 1) == "t") {
       const response = await API.post(
@@ -82,17 +82,16 @@ const Transaction = () => {
         setStatus(true);
         setTransactionData(response.data.messages);
       } else {
-        console.log(response.data);
+        // console.log(response.data);
       }
     }
     setTransactionLoading(false);
   };
 
-
-    // Generate Time Date from TimeStamp
-    const genrateTimeDate = (timestamp)=>{
-      return new Date(timestamp).toLocaleString()
-    }
+  // Generate Time Date from TimeStamp
+  const genrateTimeDate = (timestamp) => {
+    return new Date(timestamp).toLocaleString();
+  };
 
   return (
     <div className="transaction-body">
@@ -193,7 +192,11 @@ const Transaction = () => {
                         </div>
                         <div className="value mb-4">
                           <div className="trans-point">Time : </div>
-                          {genrateTimeDate(element?.timestamp ? element?.timestamp : element?.last_modified)}
+                          {genrateTimeDate(
+                            element?.timestamp
+                              ? element?.timestamp
+                              : element?.last_modified
+                          )}
                         </div>
                       </div>
                     </div>

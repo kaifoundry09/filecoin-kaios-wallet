@@ -46,9 +46,7 @@ function VerificationMnmonic() {
   // Handle API for save wallet address to our backend
   const handleSaveAddress = async () => {
     const address = localStorage.getItem("address").slice(1, -1);
-    console.log(address);
     const response = await API.post(`/api/v1/new_user/${address}`);
-    console.log(response.data);
   };
 
   function nav(move) {
@@ -205,7 +203,6 @@ function VerificationMnmonic() {
 
   // Handle Next Process
   const handleNextProcess = () => {
-    console.log(inputsString);
     if (random.length === 1 && inputs.input1 !== "init") {
       if (mnmonicArr[random[0]] === inputsString.input1) {
         setVerification(true);
@@ -274,9 +271,6 @@ function VerificationMnmonic() {
             {mnmonicArr &&
               mnmonicArr.map((element, index) => {
                 if (random.includes(index)) {
-                  // setCounter(counter + 1)
-                  console.log("random", random);
-                  console.log("mnmonicArr", mnmonicArr);
                   return (
                     <li
                       className={

@@ -1,14 +1,28 @@
 import CryptoJS from "crypto-js";
+import {DeviceUUID} from "device-uuid";
+let uuid = new DeviceUUID().get();
+var userAgent = navigator.userAgent;
 const secretKey = "filecoin-wallet-create-hash-of-password"; //this secret key use encrytion for password.
+
 
 // Handle Save Data
 export const saveData = (name, data) => {
   localStorage.setItem(name, JSON.stringify(data));
 };
 
+// Convertt Password into Hash
+export const passwordHash = (password)=>{
+  let passwordHash = password;
+  for(let i=0;i<5; i++){
+    passwordHash = String(CryptoJS.MD5(passwordHash));
+  }
+  return passwordHash;
+}
+
 // Handle Encryption
 export const encryptData = (password, data) => {
-  let secretKey = CryptoJS.SHA256(password);
+  // console.log(passwordHash(passwordHash(password)+passwordHash(userAgent)))
+  let secretKey = CryptoJS.SHA256(passwordHash(passwordHash(password)+passwordHash(userAgent)));
   let encrypted = CryptoJS.AES.encrypt(
     JSON.stringify(data),
     secretKey.toString()
@@ -18,7 +32,8 @@ export const encryptData = (password, data) => {
 
 // Handle Decryption
 export const decryptData = (password, data) => {
-  let secretKey = CryptoJS.SHA256(password);
+  console.log(passwordHash(passwordHash(password)+passwordHash(userAgent)))
+  let secretKey = CryptoJS.SHA256(passwordHash(passwordHash(password)+passwordHash(userAgent)));
   let bytes = CryptoJS.AES.decrypt(data.slice(1, -1), secretKey.toString());
   let decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   return decrypted;
@@ -26,13 +41,13 @@ export const decryptData = (password, data) => {
 
 // Handle encryption of password
 export const encryptPassword = (password) => {
-  let passwordHash = CryptoJS.AES.encrypt(password, secretKey).toString();
+  let passwordHash = CryptoJS.AES.encrypt(password, secretKey+uuid).toString();
   return passwordHash;
 };
 
 // Handle decryption of password
 export const decryptPassword = (passwordHash) => {
-  let bytes = CryptoJS.AES.decrypt(passwordHash, secretKey);
+  let bytes = CryptoJS.AES.decrypt(passwordHash, secretKey+uuid);
   let password = bytes.toString(CryptoJS.enc.Utf8);
   return password;
 };
@@ -40,7 +55,6 @@ export const decryptPassword = (passwordHash) => {
 // Handle Copy
 export const copyToClipboard = (linkToGo) => {
   if (typeof navigator.clipboard == "undefined") {
-    console.log("navigator.clipboard");
     var textArea = document.createElement("textarea");
     textArea.value = linkToGo;
     textArea.style.position = "fixed"; //avoid scrolling to bottom
@@ -51,7 +65,6 @@ export const copyToClipboard = (linkToGo) => {
     try {
       var successful = document.execCommand("copy");
       var msg = successful ? "successful" : "unsuccessful";
-      console.log(msg);
     } catch (err) {
       console.warning("Was not possible to copy te text: ", err);
     }

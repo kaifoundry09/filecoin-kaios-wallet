@@ -78,10 +78,11 @@ const Send = () => {
   // Handle fetch RPC
   const [balance, setBalance] = useState(0);
   const fetchBalance = async () => {
-    let add = activeIndex < address.length? address[activeIndex]:importAddress[activeIndex - address.length]
-    const response = await API.post(
-      `/api/v1/walletbalance/${add}`
-    );
+    let add =
+      activeIndex < address.length
+        ? address[activeIndex]
+        : importAddress[activeIndex - address.length];
+    const response = await API.post(`/api/v1/walletbalance/${add}`);
     setBalance(Number(response.data.balance) / new BigNumber(1e18));
   };
 
@@ -103,27 +104,12 @@ const Send = () => {
 
     // Do something with the pasted text (e.g. display it in the input field)
     inputRef.current.value = pastedText;
-    console.log(pastedText);
     setToAddress(pastedText);
   }
-
-  const handlePasteAddress = async (e) => {
-    // var textarea = document.createElement("textarea");
-    // textarea.contentEditable = true;
-    // document.body.appendChild(textarea);
-    // textarea.focus();
-    // document.execCommand("paste");
-    // console.log(textarea.textContent)
-    // console.log(document.execCommand("paste"))
-    // document.body.removeChild(textarea)
-    // const pasteData = await navigator.clipboard.readText();
-    // setToAddress(pasteData);
-  };
 
   // New Scanner Function for qr img
   const readQrCode = (file) => {
     if (!file) {
-      console.log(file);
       return;
     }
     QrScanner.scanImage(file, { returnDetailedScanResult: true })
@@ -145,7 +131,6 @@ const Send = () => {
     const image = new File([blob], "qr-code.png", { type: blob.type });
     // Share Code
     try {
-      console.log(image);
       readQrCode(image);
     } catch (error) {
       console.log(error);
@@ -174,9 +159,6 @@ const Send = () => {
                   facingMode: "environment",
                 };
             }
-            console.log(
-              device.kind + ": " + device.label + " id = " + device.deviceId
-            );
           });
           setwebcam2(options);
         });
@@ -190,7 +172,6 @@ const Send = () => {
   }
 
   function setwebcam2(options) {
-    console.log(options);
     var n = navigator;
     if (n.mediaDevices.getUserMedia) {
       n.mediaDevices
@@ -217,7 +198,6 @@ const Send = () => {
     navigator.mediaDevices
       .getUserMedia({ video: { width: 1920, height: 1080 } })
       .then((stream) => {
-        console.log(stream);
         let video = videoRef.current;
         video.srcObject = stream;
         video.play();
@@ -243,7 +223,6 @@ const Send = () => {
 
     const canvas = document.getElementById("canvas");
     let image = canvas.toDataURL();
-    console.log(image);
     blobImg(image);
   };
 
@@ -254,12 +233,13 @@ const Send = () => {
 
   // Send Filecoin Function
   const sendFileCoin = async (privateKey) => {
-    console.log("private", privateKey);
     let importAddress = JSON.parse(localStorage.getItem("import"));
     let address = JSON.parse(localStorage.getItem("address"));
     const activeIndex = localStorage.getItem("feai");
-    let fromAddress = address.length > activeIndex ?  address[activeIndex] : importAddress[activeIndex - address.length];
-    console.log("toAddress", toAddress);
+    let fromAddress =
+      address.length > activeIndex
+        ? address[activeIndex]
+        : importAddress[activeIndex - address.length];
 
     setTransactionLoading(true);
     setTransactionDone(false);
@@ -269,17 +249,14 @@ const Send = () => {
       From: fromAddress,
       Value: String(amount * new BigNumber(1e18)),
     });
-    console.log("message", message);
     const signedtransaction = await filecoinTransaction.signMessage(
       message,
       privateKey
     );
 
-    console.log("signedtransaction", signedtransaction);
     const transaction = await filecoinTransaction.pushMessage(
       signedtransaction
     );
-    console.log("transaction", transaction);
 
     setTimeout(async () => {
       try {
@@ -287,7 +264,6 @@ const Send = () => {
           transaction.data.result["/"],
           message.Nonce
         );
-        console.log("waitMessage", waitMessage);
         handleSaveTransaction(
           toAddress,
           fromAddress,
@@ -319,7 +295,6 @@ const Send = () => {
   ) => {
     try {
       const waitMessage = await filecoinTransaction.waitMessage(cid, nonce);
-      console.log("waitMessage", waitMessage);
       if (waitMessage?.result) {
       }
       setTransactionLoading(false);
@@ -342,7 +317,10 @@ const Send = () => {
     const activeIndex = localStorage.getItem("feai");
     let importData = JSON.parse(localStorage.getItem("feik"));
     let address = JSON.parse(localStorage.getItem("address"));
-    let encryptedData = address.length > activeIndex ?  data[activeIndex] : importData[activeIndex - address.length];
+    let encryptedData =
+      address.length > activeIndex
+        ? data[activeIndex]
+        : importData[activeIndex - address.length];
     try {
       const PlainData = decryptData(inputPassword, `"${encryptedData}"`);
       dispatch(savePrivateKey(PlainData._privateKey));
@@ -356,14 +334,12 @@ const Send = () => {
 
   // Handle API for save wallet transaction to our backend
   const handleSaveTransaction = async (to, fromAddress, cid, value) => {
-    console.log("handle");
     const response = await API.post(`/api/v1/transaction_data/${fromAddress}`, {
       cid,
       value,
       to,
     });
     if (response.data.msg == "success") {
-      console.log(response.data);
     }
   };
 
@@ -373,6 +349,26 @@ const Send = () => {
     }
   };
 
+  const [dollarPrice, setDollarPrice] = useState(0);
+  const [rate, setRate] = useState(0);
+  // Handle Dollar Price
+  const getDollarPrice = async () => {
+    const response = await API.get(`/api/v1/d_price`);
+    if (response?.data?.data?.price) {
+      setRate(response?.data?.data?.price);
+    }
+  };
+
+  // Only Call when page render
+  useEffect(() => {
+    getDollarPrice();
+  }, []);
+
+  // Call When amount change
+  useEffect(() => {
+    setDollarPrice(rate * amount);
+  }, [amount]);
+
   return (
     <div>
       {!transactionDone &&
@@ -381,7 +377,13 @@ const Send = () => {
         !scannerOn && (
           <div id="send">
             <div className="container">
-              <div style={{ display: "flex", alignItems: "center", marginTop:"11px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "11px",
+                }}
+              >
                 <button
                   className="items"
                   tabIndex={0}
@@ -410,18 +412,6 @@ const Send = () => {
                     type="text"
                     placeholder="0xf033259..."
                   />
-                  {/* <button
-                    className="items"
-                    tabIndex={3}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        handlePasteAddress(e);
-                      }
-                    }}
-                    onClick={handlePasteAddress}
-                  >
-                    <MdContentPaste />
-                  </button> */}
                 </div>
               </div>
               <div className="third">
@@ -434,6 +424,15 @@ const Send = () => {
                   type="tel"
                   placeholder="0.0321"
                 />
+                <div
+                  style={{
+                    marginTop: ".5rem",
+                    opacity: ".8",
+                    fontSize: ".8rem",
+                  }}
+                >
+                  {amount ? amount : "0"} FIL value is : ${dollarPrice}
+                </div>
                 {!amaoutValid && (
                   <div className="amount-error">
                     Cannot be more than {balance} FIL

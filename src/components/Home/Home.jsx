@@ -76,11 +76,6 @@ function Home() {
     }
   }
 
-  // const handleKeyPress (event) {
-  //   if(event.key === 'Enter'){
-  //     console.log('enter press here! ')
-  //   }
-  // }
   return (
     <div className="home-card-wrapper">
       {/* <div className="wrapper">

@@ -25,6 +25,7 @@
         box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.172);
         position: relative;
         margin: 1rem;
+        overflow-x: hidden;
         button {
             margin-top: 0px;
             border: 1px solid #fff;
@@ -165,7 +166,7 @@
 
             h2 {
                 margin-bottom: .5rem;
-                margin-top: 1rem;
+                margin-top: .5rem;
                 font-size: 1rem;
                 font-weight: 400;
                 text-align: center;

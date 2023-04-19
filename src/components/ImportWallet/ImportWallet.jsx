@@ -18,7 +18,7 @@ function ImportWallet() {
 
   const genrateAddress = () => {
     const generatedKeypair = keyPairFromMnemonic(WORKING_NET, 0, mnmonic);
-    console.log(generatedKeypair);
+    // console.log(generatedKeypair);
     dispatch(saveAddress(generatedKeypair.address));
     saveData("address", [generatedKeypair.address]);
     dispatch(savePassword(password));
@@ -37,7 +37,6 @@ function ImportWallet() {
     reader.onload = async (e) => {
       const text = e.target.result;
       setMnmonic(text);
-      console.log(text);
     };
     reader.readAsText(e.target.files[0]);
   };

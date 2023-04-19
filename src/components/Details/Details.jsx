@@ -77,11 +77,10 @@ function Details() {
     getDataFromMsg();
   }, []);
 
-
   // Generate Time Date from TimeStamp
-  const genrateTimeDate = (timestamp)=>{
-    return new Date(timestamp).toLocaleString()
-  }
+  const genrateTimeDate = (timestamp) => {
+    return new Date(timestamp).toLocaleString();
+  };
 
   return (
     <div>

@@ -18,7 +18,6 @@ function Export() {
   }
 
   function handleKeydown(e) {
-    console.log(e.key);
     switch (e.key) {
       case "ArrowUp":
         nav(-1);
@@ -43,7 +42,10 @@ function Export() {
     let importData = JSON.parse(localStorage.getItem("feik"));
     let address = JSON.parse(localStorage.getItem("address"));
     const activeIndex = localStorage.getItem("feai");
-    let encryptedData = address.length > activeIndex ?  data[activeIndex] : importData[activeIndex - address.length];
+    let encryptedData =
+      address.length > activeIndex
+        ? data[activeIndex]
+        : importData[activeIndex - address.length];
     try {
       const PlainData = decryptData(password, `"${encryptedData}"`);
       setData(PlainData);
